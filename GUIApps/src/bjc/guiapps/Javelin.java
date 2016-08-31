@@ -3,18 +3,18 @@
  * Copyright (C) 2003-2013 JNode.org
  *
  * This library is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published
- * by the Free Software Foundation; either version 2.1 of the License, or
- * (at your option) any later version.
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or (at
+ * your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
- * License for more details.
+ * This library is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
+ * General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this library; If not, write to the Free Software Foundation, Inc., 
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * along with this library; If not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 package bjc.guiapps;
@@ -86,31 +86,31 @@ public class Javelin extends JFrame {
 	}
 
 	private static void doInitLog4j() {
-		 logger = LogManager.getLogger();
+		logger = LogManager.getLogger();
 	}
 
-	private final List<Javelin> windows = new LinkedList<Javelin>();
-	private static Logger logger;
-	
-	private LinkedList<String> prevHistory;
-	private LinkedList<String> afterHistory;
-	
+	private final List<Javelin>	windows	= new LinkedList<>();
+	private static Logger		logger;
+
+	private LinkedList<String>	prevHistory;
+	private LinkedList<String>	afterHistory;
+
 	@SuppressWarnings("unused")
-	private Map<String, String> bookMarks;
-	
-	private String curPage;
+	private Map<String, String>	bookMarks;
 
-	private JEditorPane viewPane;
+	private String				curPage;
 
-	private final IntHolder fontInc = new IntHolder(0);
-	
-	private JTextField ulBar;
+	private JEditorPane			viewPane;
+
+	private final IntHolder		fontInc	= new IntHolder(0);
+
+	private JTextField			ulBar;
 
 	public Javelin() {
 		super("Javelin");
 
 		prevHistory = loadHistory();
-		afterHistory = new LinkedList<String>();
+		afterHistory = new LinkedList<>();
 		bookMarks = loadBookMarks();
 
 		setJMenuBar(getBar());
@@ -120,7 +120,7 @@ public class Javelin extends JFrame {
 		jp.add(getTopPane(), BorderLayout.NORTH);
 
 		viewPane = getViewPane();
-		
+
 		jp.add(new JScrollPane(viewPane), BorderLayout.CENTER);
 
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -138,20 +138,20 @@ public class Javelin extends JFrame {
 		this.setSize(640, 480);
 		this.setVisible(true);
 
-		//doGo("http://localhost:80/index.html");
+		// doGo("http://localhost:80/index.html");
 	}
 
 	private void doGo(String ul) {
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		
+
 		try {
 			ulBar.setText(ul);
 			viewPane.setPage(ul);
-			
+
 			if (curPage != null) {
 				prevHistory.push(curPage);
 			}
-			
+
 			curPage = ul;
 		} catch (IOException e) {
 			logger.error("Could not fetch page", e);
@@ -184,9 +184,8 @@ public class Javelin extends JFrame {
 
 				fontInc.upFive();
 				((HTMLDocument) viewPane.getDocument()).getStyleSheet()
-						.addRule(
-								"" + "body { font-size: "
-										+ (100 + fontInc.getProp()) + "% ; }");
+						.addRule("" + "body { font-size: "
+								+ (100 + fontInc.getProp()) + "% ; }");
 
 			}
 		});
@@ -200,9 +199,8 @@ public class Javelin extends JFrame {
 
 				fontInc.downFive();
 				((HTMLDocument) viewPane.getDocument()).getStyleSheet()
-						.addRule(
-								"" + "body { font-size: "
-										+ (100 + fontInc.getProp()) + "% ; }");
+						.addRule("" + "body { font-size: "
+								+ (100 + fontInc.getProp()) + "% ; }");
 
 			}
 		});
@@ -215,11 +213,9 @@ public class Javelin extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				fontInc.downFive();
-				((HTMLDocument) viewPane.getDocument())
-						.getStyleSheet()
-						.addRule(
-								JOptionPane
-										.showInputDialog("CSS String to inject? "));
+				((HTMLDocument) viewPane.getDocument()).getStyleSheet()
+						.addRule(JOptionPane.showInputDialog(
+								"CSS String to inject? "));
 
 			}
 		});
@@ -240,9 +236,7 @@ public class Javelin extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (prevHistory.isEmpty()) {
-
-				} else {
+				if (!prevHistory.isEmpty()) {
 					afterHistory.push(curPage);
 					curPage = prevHistory.pop();
 					doGo(curPage);
@@ -257,9 +251,7 @@ public class Javelin extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (afterHistory.isEmpty()) {
-
-				} else {
+				if (!afterHistory.isEmpty()) {
 					prevHistory.push(curPage);
 					curPage = afterHistory.pop();
 					doGo(curPage);
@@ -308,11 +300,11 @@ public class Javelin extends JFrame {
 		return jep;
 	}
 
-	private Map<String, String> loadBookMarks() {
-		return new HashMap<String, String>();
+	private static Map<String, String> loadBookMarks() {
+		return new HashMap<>();
 	}
 
-	private LinkedList<String> loadHistory() {
-		return new LinkedList<String>();
+	private static LinkedList<String> loadHistory() {
+		return new LinkedList<>();
 	}
 }

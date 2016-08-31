@@ -40,6 +40,7 @@ public class Editor extends JFrame {
 	public static class AutoIndentAction extends AbstractAction {
 		private static final long serialVersionUID = 6881668796439155311L;
 
+		@Override
 		public void actionPerformed(ActionEvent ae) {
 			JTextArea comp = (JTextArea) ae.getSource();
 			Document doc = comp.getDocument();
@@ -59,10 +60,10 @@ public class Editor extends JFrame {
 
 				doc.insertString(comp.getCaretPosition(),
 						'\n' + whiteSpace, null);
-			} catch (BadLocationException ex) {
+			} catch (@SuppressWarnings("unused") BadLocationException ex) {
 				try {
 					doc.insertString(comp.getCaretPosition(), "\n", null);
-				} catch (BadLocationException blex) {
+				} catch (@SuppressWarnings("unused") BadLocationException blex) {
 					// ignore
 				}
 			}
@@ -71,7 +72,7 @@ public class Editor extends JFrame {
 		/**
 		 * Returns leading white space characters in the specified string.
 		 */
-		private String getLeadingWhiteSpace(String str) {
+		private static String getLeadingWhiteSpace(String str) {
 			return str.substring(0, getLeadingWhiteSpaceWidth(str));
 		}
 
@@ -79,7 +80,7 @@ public class Editor extends JFrame {
 		 * Returns the number of leading white space characters in the
 		 * specified string.
 		 */
-		private int getLeadingWhiteSpaceWidth(String str) {
+		private static int getLeadingWhiteSpaceWidth(String str) {
 			int whitespace = 0;
 			while (whitespace < str.length()) {
 				char ch = str.charAt(whitespace);
@@ -179,9 +180,9 @@ public class Editor extends JFrame {
 	}
 
 	private JMenu createFileMenu() {
-		JMenu file = new JMenu("File");
+		JMenu fileMenu = new JMenu("File");
 
-		file.setMnemonic('F');
+		fileMenu.setMnemonic('F');
 
 		JMenuItem newFile = new JMenuItem("New");
 		JMenuItem open = new JMenuItem("Open...");
@@ -209,17 +210,17 @@ public class Editor extends JFrame {
 		exit.setAccelerator(KeyStroke.getKeyStroke("ctrl q"));
 		exit.addActionListener(e -> exit());
 
-		file.add(newFile);
-		file.addSeparator();
+		fileMenu.add(newFile);
+		fileMenu.addSeparator();
 
-		file.add(open);
-		file.add(save);
-		file.add(saveAs);
-		file.addSeparator();
+		fileMenu.add(open);
+		fileMenu.add(save);
+		fileMenu.add(saveAs);
+		fileMenu.addSeparator();
 
-		file.add(exit);
+		fileMenu.add(exit);
 
-		return file;
+		return fileMenu;
 	}
 
 	private JMenuBar createMenu() {
@@ -283,22 +284,22 @@ public class Editor extends JFrame {
 		}
 	}
 
-	private void readFile(final File file) {
+	private void readFile(final File fileToRead) {
 		try {
-			FileInputStream fis = new FileInputStream(file);
-			
+			FileInputStream fis = new FileInputStream(fileToRead);
+
 			byte[] data = new byte[fis.available()];
-			
+
 			fis.read(data);
-			
+
 			textArea.setText(new String(data));
 			textArea.setCaretPosition(0);
 			fis.close();
-		} catch (FileNotFoundException fnfe) {
-			JOptionPane.showMessageDialog(this, "File not found: " + file);
-		} catch (IOException ioe) {
+		} catch (@SuppressWarnings("unused") FileNotFoundException fnfex) {
+			JOptionPane.showMessageDialog(this, "File not found: " + fileToRead);
+		} catch (@SuppressWarnings("unused") IOException ioex) {
 			JOptionPane.showMessageDialog(this,
-					"Error opening file: " + file);
+					"Error opening file: " + fileToRead);
 		}
 	}
 
@@ -314,9 +315,9 @@ public class Editor extends JFrame {
 
 	private void saveAs() {
 		initFileChooser();
-		
+
 		fc.setDialogTitle("Save file");
-		
+
 		if (JFileChooser.APPROVE_OPTION == fc.showSaveDialog(this)) {
 			file = fc.getSelectedFile();
 			updateTitle(file.getName());
@@ -328,20 +329,20 @@ public class Editor extends JFrame {
 		setTitle("JNote - " + title);
 	}
 
-	private void writeFile(final File file) {
+	private void writeFile(final File fileToWrite) {
 		try {
-			FileWriter fw = new FileWriter(file);
+			FileWriter fw = new FileWriter(fileToWrite);
 			fw.write(textArea.getText());
 			fw.flush();
 			fw.close();
-		} catch (FileNotFoundException fnfe) {
+		} catch (@SuppressWarnings("unused") FileNotFoundException fnfex) {
 			JOptionPane.showMessageDialog(Editor.this,
-					"File not found: " + file);
-		} catch (IOException ioe) {
+					"File not found: " + fileToWrite);
+		} catch (@SuppressWarnings("unused") IOException ioex) {
 			JOptionPane.showMessageDialog(Editor.this,
-					"Error saving file: " + file);
+					"Error saving file: " + fileToWrite);
 		} catch (Exception x) {
-			String msg = "Unexpected error wile saving file: " + file;
+			String msg = "Unexpected error wile saving file: " + fileToWrite;
 			logger.error(msg, x);
 			JOptionPane.showMessageDialog(Editor.this, msg);
 		}
